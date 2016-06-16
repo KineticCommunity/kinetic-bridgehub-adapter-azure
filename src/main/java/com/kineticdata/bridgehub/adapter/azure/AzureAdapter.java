@@ -125,12 +125,6 @@ public class AzureAdapter implements BridgeAdapter {
             throw new BridgeError("Invalid Structure: '" + structure + "' is not a valid structure");
         }
         
-        List<String> fields = request.getFields();
-        
-        if ( fields == null) {
-            throw new BridgeError("No Fields entered. You must enter at least one field.");
-        }
-        
         AzureQualificationParser parser = new AzureQualificationParser();
         String query = parser.parse(request.getQuery(),request.getParameters());
 
