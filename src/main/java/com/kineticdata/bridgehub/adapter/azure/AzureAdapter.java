@@ -64,7 +64,7 @@ public class AzureAdapter implements BridgeAdapter {
     private final ConfigurablePropertyMap properties = new ConfigurablePropertyMap(
         new ConfigurableProperty(Properties.SUBSCRIPTION_ID).setIsRequired(true),
         new ConfigurableProperty(Properties.KEYSTORE_PATH).setIsRequired(true),
-        new ConfigurableProperty(Properties.KEYSTORE_PASSWORD).setIsRequired(true)
+        new ConfigurableProperty(Properties.KEYSTORE_PASSWORD).setIsRequired(true).setIsSensitive(true)
     );
     
     private String subscriptionId;
@@ -132,7 +132,7 @@ public class AzureAdapter implements BridgeAdapter {
 
         String url = String.format("https://management.core.usgovcloudapi.net/%s", this.subscriptionId);
         
-        if (structure.equals("Image")) {
+        if (structure.equals("Images")) {
             url = String.format("%s/services/images", url);
         } else if (structure.equals("Sizes")) {
             url = String.format("%s/rolesizes", url);
@@ -170,15 +170,15 @@ public class AzureAdapter implements BridgeAdapter {
 
         if (structure.equals("Images")) {
             outputArray = (JSONArray) jsonOutput.getJSONObject("Images").getJSONArray("OSImage");
-        } else if (structure == "Sizes") {
+        } else if (structure.equals("Sizes")) {
             outputArray = (JSONArray) jsonOutput.getJSONObject("RoleSizes").getJSONArray("RoleSize");
-        } else if (structure == "Virtual Networks") {
+        } else if (structure.equals("Virtual Networks")) {
             outputArray = (JSONArray) jsonOutput.getJSONObject("VirtualNetworkSites").getJSONArray("VirtualNetworkSite");
         } else if (structure.equals("Regions")) {
             outputArray = (JSONArray) jsonOutput.getJSONObject("Locations").getJSONArray("Location");
-        } else if (structure == "Storage Accounts") {
+        } else if (structure.equals("Storage Accounts")) {
             outputArray = (JSONArray) jsonOutput.getJSONObject("StorageServices").getJSONArray("StorageService");
-        } else if (structure == "Affinity Groups") {
+        } else if (structure.equals("Affinity Groups")) {
             outputArray = (JSONArray) jsonOutput.getJSONObject("AffinityGroups").getJSONArray("AffinityGroup");
         }
 
@@ -249,7 +249,7 @@ public class AzureAdapter implements BridgeAdapter {
         
         String url = String.format("https://management.core.usgovcloudapi.net/%s", this.subscriptionId);
 
-        if (structure.equals("Image")) {
+        if (structure.equals("Images")) {
             url = String.format("%s/services/images", url);
         } else if (structure.equals("Sizes")) {
             url = String.format("%s/rolesizes", url);
@@ -287,15 +287,15 @@ public class AzureAdapter implements BridgeAdapter {
         
         if (structure.equals("Images")) {
             outputArray = (JSONArray) jsonOutput.getJSONObject("Images").getJSONArray("OSImage");
-        } else if (structure == "Sizes") {
+        } else if (structure.equals("Sizes")) {
             outputArray = (JSONArray) jsonOutput.getJSONObject("RoleSizes").getJSONArray("RoleSize");
-        } else if (structure == "Virtual Networks") {
+        } else if (structure.equals("Virtual Networks")) {
             outputArray = (JSONArray) jsonOutput.getJSONObject("VirtualNetworkSites").getJSONArray("VirtualNetworkSite");
         } else if (structure.equals("Regions")) {
             outputArray = (JSONArray) jsonOutput.getJSONObject("Locations").getJSONArray("Location");
-        } else if (structure == "Storage Accounts") {
+        } else if (structure.equals("Storage Accounts")) {
             outputArray = (JSONArray) jsonOutput.getJSONObject("StorageServices").getJSONArray("StorageService");
-        } else if (structure == "Affinity Groups") {
+        } else if (structure.equals("Affinity Groups")) {
             outputArray = (JSONArray) jsonOutput.getJSONObject("AffinityGroups").getJSONArray("AffinityGroup");
         }
 
@@ -383,7 +383,7 @@ public class AzureAdapter implements BridgeAdapter {
         
         String url = String.format("https://management.core.usgovcloudapi.net/%s", this.subscriptionId);
 
-        if (structure.equals("Image")) {
+        if (structure.equals("Images")) {
             url = String.format("%s/services/images", url);
         } else if (structure.equals("Sizes")) {
             url = String.format("%s/rolesizes", url);
@@ -421,15 +421,15 @@ public class AzureAdapter implements BridgeAdapter {
         
         if (structure.equals("Images")) {
             outputArray = (JSONArray) jsonOutput.getJSONObject("Images").getJSONArray("OSImage");
-        } else if (structure == "Sizes") {
+        } else if (structure.equals("Sizes")) {
             outputArray = (JSONArray) jsonOutput.getJSONObject("RoleSizes").getJSONArray("RoleSize");
-        } else if (structure == "Virtual Networks") {
+        } else if (structure.equals("Virtual Networks")) {
             outputArray = (JSONArray) jsonOutput.getJSONObject("VirtualNetworkSites").getJSONArray("VirtualNetworkSite");
         } else if (structure.equals("Regions")) {
             outputArray = (JSONArray) jsonOutput.getJSONObject("Locations").getJSONArray("Location");
-        } else if (structure == "Storage Accounts") {
+        } else if (structure.equals("Storage Accounts")) {
             outputArray = (JSONArray) jsonOutput.getJSONObject("StorageServices").getJSONArray("StorageService");
-        } else if (structure == "Affinity Groups") {
+        } else if (structure.equals("Affinity Groups")) {
             outputArray = (JSONArray) jsonOutput.getJSONObject("AffinityGroups").getJSONArray("AffinityGroup");
         }
         
