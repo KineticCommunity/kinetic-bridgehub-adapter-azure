@@ -210,7 +210,7 @@ public class AzureAdapter implements BridgeAdapter {
                 String rec = null;
                 for (int i = 0; i < outputArray.length(); i++) {
                     if (outputArray.getJSONObject(i).has(key)) {
-                        rec = outputArray.getJSONObject(i).getString(key);
+                        rec = outputArray.getJSONObject(i).get(key).toString();
                     }
 
                     if (!value.equals(rec)) {
