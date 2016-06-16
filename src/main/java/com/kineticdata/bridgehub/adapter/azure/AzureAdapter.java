@@ -19,6 +19,7 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.KeyStore;
 import java.security.SecureRandom;
@@ -31,6 +32,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.net.ssl.HttpsURLConnection;
@@ -129,29 +131,19 @@ public class AzureAdapter implements BridgeAdapter {
         String query = parser.parse(request.getQuery(),request.getParameters());
 
         String url = String.format("https://management.core.usgovcloudapi.net/%s", this.subscriptionId);
-
-        if (null != structure)
-        switch (structure) {
-            case "Images":
-                url = String.format("%s/services/images", url);
-                break;
-            case "Sizes":
-                url = String.format("%s/rolesizes", url);
-                break;
-            case "Virtual Networks":
-                url = String.format("%s/services/networking/virtualnetwork", url);
-                break;
-            case "Regions":
-                url = String.format("%s/locations", url);
-                break;
-            case "Storage Accounts":
-                url = String.format("%s/services/storageservices", url);
-                break;
-            case "Affinity Groups":
-                url = String.format("%s/affinitygroups", url);
-                break;
-            default:
-                break;
+        
+        if (structure == "Image") {
+            url = String.format("%s/services/images", url);
+        } else if (structure == "Sizes") {
+            url = String.format("%s/rolesizes", url);
+        } else if (structure == "Virtual Networks") {
+            url = String.format("%s/services/networking/virtualnetwork", url);
+        } else if (structure == "Regions") {
+            url = String.format("%s/locations", url);
+        } else if (structure == "Storage Accounts") {
+            url = String.format("%s/services/storageservices", url);
+        } else if (structure == "Affinity Groups") {
+            url = String.format("%s/affinitygroups", url);
         }
 
         JSONArray outputArray = null;
@@ -162,31 +154,33 @@ public class AzureAdapter implements BridgeAdapter {
             // Parse XML response to JSON
             jsonOutput = XML.toJSONObject(response);
             logger.trace("API Response: " + jsonOutput);
-        } catch (UnrecoverableKeyException | KeyManagementException | KeyStoreException | NoSuchAlgorithmException | IOException ex) {
+        } catch (UnrecoverableKeyException ex) {
+            throw new BridgeError("Unable to make a connection to properly execute the query to Azure");
+        } catch (MalformedURLException ex) {
+            throw new BridgeError("Unable to make a connection to properly execute the query to Azure");
+        } catch (KeyManagementException ex) {
+            throw new BridgeError("Unable to make a connection to properly execute the query to Azure");
+        } catch (KeyStoreException ex) {
+            throw new BridgeError("Unable to make a connection to properly execute the query to Azure");
+        } catch (NoSuchAlgorithmException ex) {
+            throw new BridgeError("Unable to make a connection to properly execute the query to Azure");
+        } catch (IOException ex) {
             throw new BridgeError("Unable to make a connection to properly execute the query to Azure");
         }
+
         
-        if (null != structure) switch (structure) {
-            case "Images":
-                outputArray = (JSONArray) jsonOutput.getJSONObject("Images").getJSONArray("OSImage");
-                break;
-            case "Sizes":
-                outputArray = (JSONArray) jsonOutput.getJSONObject("RoleSizes").getJSONArray("RoleSize");
-                break;
-            case "Virtual Networks":
-                outputArray = (JSONArray) jsonOutput.getJSONObject("VirtualNetworkSites").getJSONArray("VirtualNetworkSite");
-                break;
-            case "Regions":
-                outputArray = (JSONArray) jsonOutput.getJSONObject("Locations").getJSONArray("Location");
-                break;
-            case "Storage Accounts":
-                outputArray = (JSONArray) jsonOutput.getJSONObject("StorageServices").getJSONArray("StorageService");
-                break;
-            case "Affinity Groups":
-                outputArray = (JSONArray) jsonOutput.getJSONObject("AffinityGroups").getJSONArray("AffinityGroup");
-                break;
-            default:
-                break;
+        if (structure == "Images") {
+            outputArray = (JSONArray) jsonOutput.getJSONObject("Images").getJSONArray("OSImage");
+        } else if (structure == "Sizes") {
+            outputArray = (JSONArray) jsonOutput.getJSONObject("RoleSizes").getJSONArray("RoleSize");
+        } else if (structure == "Virtual Networks") {
+            outputArray = (JSONArray) jsonOutput.getJSONObject("VirtualNetworkSites").getJSONArray("VirtualNetworkSite");
+        } else if (structure == "Regions") {
+            outputArray = (JSONArray) jsonOutput.getJSONObject("Locations").getJSONArray("Location");
+        } else if (structure == "Storage Accounts") {
+            outputArray = (JSONArray) jsonOutput.getJSONObject("StorageServices").getJSONArray("StorageService");
+        } else if (structure == "Affinity Groups") {
+            outputArray = (JSONArray) jsonOutput.getJSONObject("AffinityGroups").getJSONArray("AffinityGroup");
         }
 
         Pattern pattern = Pattern.compile("([\"\"])(?:(?=(\\\\?))\\2.)*?\\1");
@@ -256,28 +250,18 @@ public class AzureAdapter implements BridgeAdapter {
         
         String url = String.format("https://management.core.usgovcloudapi.net/%s", this.subscriptionId);
 
-        if (null != structure)
-        switch (structure) {
-            case "Images":
-                url = String.format("%s/services/images", url);
-                break;
-            case "Sizes":
-                url = String.format("%s/rolesizes", url);
-                break;
-            case "Virtual Networks":
-                url = String.format("%s/services/networking/virtualnetwork", url);
-                break;
-            case "Regions":
-                url = String.format("%s/locations", url);
-                break;
-            case "Storage Accounts":
-                url = String.format("%s/services/storageservices", url);
-                break;
-            case "Affinity Groups":
-                url = String.format("%s/affinitygroups", url);
-                break;
-            default:
-                break;
+        if (structure == "Image") {
+            url = String.format("%s/services/images", url);
+        } else if (structure == "Sizes") {
+            url = String.format("%s/rolesizes", url);
+        } else if (structure == "Virtual Networks") {
+            url = String.format("%s/services/networking/virtualnetwork", url);
+        } else if (structure == "Regions") {
+            url = String.format("%s/locations", url);
+        } else if (structure == "Storage Accounts") {
+            url = String.format("%s/services/storageservices", url);
+        } else if (structure == "Affinity Groups") {
+            url = String.format("%s/affinitygroups", url);
         }
         
         JSONArray outputArray = null;
@@ -288,31 +272,32 @@ public class AzureAdapter implements BridgeAdapter {
             // Parse XML response to JSON
             jsonOutput = XML.toJSONObject(response);
             logger.trace("API Response: " + jsonOutput);
-        } catch (UnrecoverableKeyException | KeyManagementException | KeyStoreException | NoSuchAlgorithmException | IOException ex) {
+        } catch (UnrecoverableKeyException ex) {
+            throw new BridgeError("Unable to make a connection to properly execute the query to Azure");
+        } catch (MalformedURLException ex) {
+            throw new BridgeError("Unable to make a connection to properly execute the query to Azure");
+        } catch (KeyManagementException ex) {
+            throw new BridgeError("Unable to make a connection to properly execute the query to Azure");
+        } catch (KeyStoreException ex) {
+            throw new BridgeError("Unable to make a connection to properly execute the query to Azure");
+        } catch (NoSuchAlgorithmException ex) {
+            throw new BridgeError("Unable to make a connection to properly execute the query to Azure");
+        } catch (IOException ex) {
             throw new BridgeError("Unable to make a connection to properly execute the query to Azure");
         }
         
-        if (null != structure) switch (structure) {
-            case "Images":
-                outputArray = (JSONArray) jsonOutput.getJSONObject("Images").getJSONArray("OSImage");
-                break;
-            case "Sizes":
-                outputArray = (JSONArray) jsonOutput.getJSONObject("RoleSizes").getJSONArray("RoleSize");
-                break;
-            case "Virtual Networks":
-                outputArray = (JSONArray) jsonOutput.getJSONObject("VirtualNetworkSites").getJSONArray("VirtualNetworkSite");
-                break;
-            case "Regions":
-                outputArray = (JSONArray) jsonOutput.getJSONObject("Locations").getJSONArray("Location");
-                break;
-            case "Storage Accounts":
-                outputArray = (JSONArray) jsonOutput.getJSONObject("StorageServices").getJSONArray("StorageService");
-                break;
-            case "Affinity Groups":
-                outputArray = (JSONArray) jsonOutput.getJSONObject("AffinityGroups").getJSONArray("AffinityGroup");
-                break;
-            default:
-                break;
+        if (structure == "Images") {
+            outputArray = (JSONArray) jsonOutput.getJSONObject("Images").getJSONArray("OSImage");
+        } else if (structure == "Sizes") {
+            outputArray = (JSONArray) jsonOutput.getJSONObject("RoleSizes").getJSONArray("RoleSize");
+        } else if (structure == "Virtual Networks") {
+            outputArray = (JSONArray) jsonOutput.getJSONObject("VirtualNetworkSites").getJSONArray("VirtualNetworkSite");
+        } else if (structure == "Regions") {
+            outputArray = (JSONArray) jsonOutput.getJSONObject("Locations").getJSONArray("Location");
+        } else if (structure == "Storage Accounts") {
+            outputArray = (JSONArray) jsonOutput.getJSONObject("StorageServices").getJSONArray("StorageService");
+        } else if (structure == "Affinity Groups") {
+            outputArray = (JSONArray) jsonOutput.getJSONObject("AffinityGroups").getJSONArray("AffinityGroup");
         }
 
         Pattern pattern = Pattern.compile("([\"\"])(?:(?=(\\\\?))\\2.)*?\\1");
@@ -399,28 +384,18 @@ public class AzureAdapter implements BridgeAdapter {
         
         String url = String.format("https://management.core.usgovcloudapi.net/%s", this.subscriptionId);
 
-        if (null != structure)
-        switch (structure) {
-            case "Images":
-                url = String.format("%s/services/images", url);
-                break;
-            case "Sizes":
-                url = String.format("%s/rolesizes", url);
-                break;
-            case "Virtual Networks":
-                url = String.format("%s/services/networking/virtualnetwork", url);
-                break;
-            case "Regions":
-                url = String.format("%s/locations", url);
-                break;
-            case "Storage Accounts":
-                url = String.format("%s/services/storageservices", url);
-                break;
-            case "Affinity Groups":
-                url = String.format("%s/affinitygroups", url);
-                break;
-            default:
-                break;
+        if (structure == "Image") {
+            url = String.format("%s/services/images", url);
+        } else if (structure == "Sizes") {
+            url = String.format("%s/rolesizes", url);
+        } else if (structure == "Virtual Networks") {
+            url = String.format("%s/services/networking/virtualnetwork", url);
+        } else if (structure == "Regions") {
+            url = String.format("%s/locations", url);
+        } else if (structure == "Storage Accounts") {
+            url = String.format("%s/services/storageservices", url);
+        } else if (structure == "Affinity Groups") {
+            url = String.format("%s/affinitygroups", url);
         }
         
         JSONArray outputArray = null;
@@ -431,31 +406,32 @@ public class AzureAdapter implements BridgeAdapter {
             // Parse XML response to JSON
             jsonOutput = XML.toJSONObject(response);
             logger.trace("API Response: " + jsonOutput);
-        } catch (UnrecoverableKeyException | KeyManagementException | KeyStoreException | NoSuchAlgorithmException | IOException ex) {
+        } catch (UnrecoverableKeyException ex) {
+            throw new BridgeError("Unable to make a connection to properly execute the query to Azure");
+        } catch (MalformedURLException ex) {
+            throw new BridgeError("Unable to make a connection to properly execute the query to Azure");
+        } catch (KeyManagementException ex) {
+            throw new BridgeError("Unable to make a connection to properly execute the query to Azure");
+        } catch (KeyStoreException ex) {
+            throw new BridgeError("Unable to make a connection to properly execute the query to Azure");
+        } catch (NoSuchAlgorithmException ex) {
+            throw new BridgeError("Unable to make a connection to properly execute the query to Azure");
+        } catch (IOException ex) {
             throw new BridgeError("Unable to make a connection to properly execute the query to Azure");
         }
         
-        if (null != structure) switch (structure) {
-            case "Images":
-                outputArray = (JSONArray) jsonOutput.getJSONObject("Images").getJSONArray("OSImage");
-                break;
-            case "Sizes":
-                outputArray = (JSONArray) jsonOutput.getJSONObject("RoleSizes").getJSONArray("RoleSize");
-                break;
-            case "Virtual Networks":
-                outputArray = (JSONArray) jsonOutput.getJSONObject("VirtualNetworkSites").getJSONArray("VirtualNetworkSite");
-                break;
-            case "Regions":
-                outputArray = (JSONArray) jsonOutput.getJSONObject("Locations").getJSONArray("Location");
-                break;
-            case "Storage Accounts":
-                outputArray = (JSONArray) jsonOutput.getJSONObject("StorageServices").getJSONArray("StorageService");
-                break;
-            case "Affinity Groups":
-                outputArray = (JSONArray) jsonOutput.getJSONObject("AffinityGroups").getJSONArray("AffinityGroup");
-                break;
-            default:
-                break;
+        if (structure == "Images") {
+            outputArray = (JSONArray) jsonOutput.getJSONObject("Images").getJSONArray("OSImage");
+        } else if (structure == "Sizes") {
+            outputArray = (JSONArray) jsonOutput.getJSONObject("RoleSizes").getJSONArray("RoleSize");
+        } else if (structure == "Virtual Networks") {
+            outputArray = (JSONArray) jsonOutput.getJSONObject("VirtualNetworkSites").getJSONArray("VirtualNetworkSite");
+        } else if (structure == "Regions") {
+            outputArray = (JSONArray) jsonOutput.getJSONObject("Locations").getJSONArray("Location");
+        } else if (structure == "Storage Accounts") {
+            outputArray = (JSONArray) jsonOutput.getJSONObject("StorageServices").getJSONArray("StorageService");
+        } else if (structure == "Affinity Groups") {
+            outputArray = (JSONArray) jsonOutput.getJSONObject("AffinityGroups").getJSONArray("AffinityGroup");
         }
         
         Pattern pattern = Pattern.compile("([\"\"])(?:(?=(\\\\?))\\2.)*?\\1");
@@ -512,7 +488,7 @@ public class AzureAdapter implements BridgeAdapter {
         return new RecordList(fields, records, metadata);
     }
     
-    private static KeyStore getKeyStore(String keyStoreName, String password) throws IOException {
+    private static KeyStore getKeyStore(String keyStoreName, String password) throws IOException, BridgeError {
         KeyStore ks = null;
         FileInputStream fis = null;
         try {
@@ -522,9 +498,14 @@ public class AzureAdapter implements BridgeAdapter {
             ks.load(fis, passwordArray);
             fis.close();
 
-        } catch (KeyStoreException | IOException | NoSuchAlgorithmException | CertificateException e) {
+        } catch (KeyStoreException ex) {
+            throw new BridgeError("Unable to make a connection to properly execute the query to Azure");
+        } catch (NoSuchAlgorithmException ex) {
+            throw new BridgeError("Unable to make a connection to properly execute the query to Azure");
+        } catch (CertificateException ex) {
+            throw new BridgeError("Unable to make a connection to properly execute the query to Azure");
+        } 
 
-        }
         finally {
             if (fis != null) {
                 fis.close();
@@ -533,7 +514,7 @@ public class AzureAdapter implements BridgeAdapter {
         return ks;
     }
     
-    private static SSLSocketFactory getSSLSocketFactory(String keyStoreName, String password) throws UnrecoverableKeyException, KeyStoreException, NoSuchAlgorithmException, KeyManagementException, IOException {
+    private static SSLSocketFactory getSSLSocketFactory(String keyStoreName, String password) throws UnrecoverableKeyException, KeyStoreException, NoSuchAlgorithmException, KeyManagementException, IOException, BridgeError {
         KeyStore ks = getKeyStore(keyStoreName, password);
         KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
         keyManagerFactory.init(ks, password.toCharArray());
@@ -544,16 +525,15 @@ public class AzureAdapter implements BridgeAdapter {
           return context.getSocketFactory();
     }
     
-    private static String processGetRequest(URL url, String keyStore, String keyStorePassword) throws UnrecoverableKeyException, KeyManagementException, KeyStoreException, NoSuchAlgorithmException, IOException {
+    private static String processGetRequest(URL url, String keyStore, String keyStorePassword) throws UnrecoverableKeyException, KeyManagementException, KeyStoreException, NoSuchAlgorithmException, IOException, BridgeError {
         SSLSocketFactory sslFactory = getSSLSocketFactory(keyStore, keyStorePassword);
         HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
         con.setSSLSocketFactory(sslFactory);
         con.setRequestMethod("GET");
         con.addRequestProperty("x-ms-version", "2015-04-01");
         String response;
-        try (InputStream responseStream = (InputStream) con.getContent()) {
-            response = getStringFromInputStream(responseStream);
-        }
+        InputStream responseStream = (InputStream) con.getContent();
+        response = getStringFromInputStream(responseStream);
         return response;
     }
     
