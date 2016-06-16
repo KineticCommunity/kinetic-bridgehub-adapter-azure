@@ -132,17 +132,17 @@ public class AzureAdapter implements BridgeAdapter {
 
         String url = String.format("https://management.core.usgovcloudapi.net/%s", this.subscriptionId);
         
-        if (structure == "Image") {
+        if (structure.equals("Image")) {
             url = String.format("%s/services/images", url);
-        } else if (structure == "Sizes") {
+        } else if (structure.equals("Sizes")) {
             url = String.format("%s/rolesizes", url);
-        } else if (structure == "Virtual Networks") {
+        } else if (structure.equals("Virtual Networks")) {
             url = String.format("%s/services/networking/virtualnetwork", url);
-        } else if (structure == "Regions") {
+        } else if (structure.equals("Regions")) {
             url = String.format("%s/locations", url);
-        } else if (structure == "Storage Accounts") {
+        } else if (structure.equals("Storage Accounts")) {
             url = String.format("%s/services/storageservices", url);
-        } else if (structure == "Affinity Groups") {
+        } else if (structure.equals("Affinity Groups")) {
             url = String.format("%s/affinitygroups", url);
         }
 
@@ -153,7 +153,7 @@ public class AzureAdapter implements BridgeAdapter {
             String response = processGetRequest(new URL(url), this.keystorePath, this.keystorePassword);
             // Parse XML response to JSON
             jsonOutput = XML.toJSONObject(response);
-            logger.trace("API Response: " + jsonOutput);
+            logger.trace("!!!"+jsonOutput);
         } catch (UnrecoverableKeyException ex) {
             throw new BridgeError("Unable to make a connection to properly execute the query to Azure");
         } catch (MalformedURLException ex) {
@@ -168,14 +168,13 @@ public class AzureAdapter implements BridgeAdapter {
             throw new BridgeError("Unable to make a connection to properly execute the query to Azure");
         }
 
-        
-        if (structure == "Images") {
+        if (structure.equals("Images")) {
             outputArray = (JSONArray) jsonOutput.getJSONObject("Images").getJSONArray("OSImage");
         } else if (structure == "Sizes") {
             outputArray = (JSONArray) jsonOutput.getJSONObject("RoleSizes").getJSONArray("RoleSize");
         } else if (structure == "Virtual Networks") {
             outputArray = (JSONArray) jsonOutput.getJSONObject("VirtualNetworkSites").getJSONArray("VirtualNetworkSite");
-        } else if (structure == "Regions") {
+        } else if (structure.equals("Regions")) {
             outputArray = (JSONArray) jsonOutput.getJSONObject("Locations").getJSONArray("Location");
         } else if (structure == "Storage Accounts") {
             outputArray = (JSONArray) jsonOutput.getJSONObject("StorageServices").getJSONArray("StorageService");
@@ -250,17 +249,17 @@ public class AzureAdapter implements BridgeAdapter {
         
         String url = String.format("https://management.core.usgovcloudapi.net/%s", this.subscriptionId);
 
-        if (structure == "Image") {
+        if (structure.equals("Image")) {
             url = String.format("%s/services/images", url);
-        } else if (structure == "Sizes") {
+        } else if (structure.equals("Sizes")) {
             url = String.format("%s/rolesizes", url);
-        } else if (structure == "Virtual Networks") {
+        } else if (structure.equals("Virtual Networks")) {
             url = String.format("%s/services/networking/virtualnetwork", url);
-        } else if (structure == "Regions") {
+        } else if (structure.equals("Regions")) {
             url = String.format("%s/locations", url);
-        } else if (structure == "Storage Accounts") {
+        } else if (structure.equals("Storage Accounts")) {
             url = String.format("%s/services/storageservices", url);
-        } else if (structure == "Affinity Groups") {
+        } else if (structure.equals("Affinity Groups")) {
             url = String.format("%s/affinitygroups", url);
         }
         
@@ -286,13 +285,13 @@ public class AzureAdapter implements BridgeAdapter {
             throw new BridgeError("Unable to make a connection to properly execute the query to Azure");
         }
         
-        if (structure == "Images") {
+        if (structure.equals("Images")) {
             outputArray = (JSONArray) jsonOutput.getJSONObject("Images").getJSONArray("OSImage");
         } else if (structure == "Sizes") {
             outputArray = (JSONArray) jsonOutput.getJSONObject("RoleSizes").getJSONArray("RoleSize");
         } else if (structure == "Virtual Networks") {
             outputArray = (JSONArray) jsonOutput.getJSONObject("VirtualNetworkSites").getJSONArray("VirtualNetworkSite");
-        } else if (structure == "Regions") {
+        } else if (structure.equals("Regions")) {
             outputArray = (JSONArray) jsonOutput.getJSONObject("Locations").getJSONArray("Location");
         } else if (structure == "Storage Accounts") {
             outputArray = (JSONArray) jsonOutput.getJSONObject("StorageServices").getJSONArray("StorageService");
@@ -384,17 +383,17 @@ public class AzureAdapter implements BridgeAdapter {
         
         String url = String.format("https://management.core.usgovcloudapi.net/%s", this.subscriptionId);
 
-        if (structure == "Image") {
+        if (structure.equals("Image")) {
             url = String.format("%s/services/images", url);
-        } else if (structure == "Sizes") {
+        } else if (structure.equals("Sizes")) {
             url = String.format("%s/rolesizes", url);
-        } else if (structure == "Virtual Networks") {
+        } else if (structure.equals("Virtual Networks")) {
             url = String.format("%s/services/networking/virtualnetwork", url);
-        } else if (structure == "Regions") {
+        } else if (structure.equals("Regions")) {
             url = String.format("%s/locations", url);
-        } else if (structure == "Storage Accounts") {
+        } else if (structure.equals("Storage Accounts")) {
             url = String.format("%s/services/storageservices", url);
-        } else if (structure == "Affinity Groups") {
+        } else if (structure.equals("Affinity Groups")) {
             url = String.format("%s/affinitygroups", url);
         }
         
@@ -420,13 +419,13 @@ public class AzureAdapter implements BridgeAdapter {
             throw new BridgeError("Unable to make a connection to properly execute the query to Azure");
         }
         
-        if (structure == "Images") {
+        if (structure.equals("Images")) {
             outputArray = (JSONArray) jsonOutput.getJSONObject("Images").getJSONArray("OSImage");
         } else if (structure == "Sizes") {
             outputArray = (JSONArray) jsonOutput.getJSONObject("RoleSizes").getJSONArray("RoleSize");
         } else if (structure == "Virtual Networks") {
             outputArray = (JSONArray) jsonOutput.getJSONObject("VirtualNetworkSites").getJSONArray("VirtualNetworkSite");
-        } else if (structure == "Regions") {
+        } else if (structure.equals("Regions")) {
             outputArray = (JSONArray) jsonOutput.getJSONObject("Locations").getJSONArray("Location");
         } else if (structure == "Storage Accounts") {
             outputArray = (JSONArray) jsonOutput.getJSONObject("StorageServices").getJSONArray("StorageService");
