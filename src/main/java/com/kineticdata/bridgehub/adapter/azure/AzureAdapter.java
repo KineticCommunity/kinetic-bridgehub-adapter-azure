@@ -56,18 +56,15 @@ public class AzureAdapter implements BridgeAdapter {
     
     /** Defines the collection of property names for the adapter */
     public static class Properties {
-        public static final String SUBSCRIPTION_ID = "Subscription ID";
         public static final String KEYSTORE_PATH = "Keystore Path";
         public static final String KEYSTORE_PASSWORD = "Keystore Password";
     }
     
     private final ConfigurablePropertyMap properties = new ConfigurablePropertyMap(
-        new ConfigurableProperty(Properties.SUBSCRIPTION_ID).setIsRequired(true),
         new ConfigurableProperty(Properties.KEYSTORE_PATH).setIsRequired(true),
         new ConfigurableProperty(Properties.KEYSTORE_PASSWORD).setIsRequired(true).setIsSensitive(true)
     );
     
-    private String subscriptionId;
     private String keystorePath;
     private String keystorePassword;
     
@@ -77,7 +74,6 @@ public class AzureAdapter implements BridgeAdapter {
 
     @Override
     public void initialize() throws BridgeError {
-        this.subscriptionId = properties.getValue(Properties.SUBSCRIPTION_ID);
         this.keystorePath = properties.getValue(Properties.KEYSTORE_PATH);
         this.keystorePassword = properties.getValue(Properties.KEYSTORE_PASSWORD);
     }
@@ -120,7 +116,7 @@ public class AzureAdapter implements BridgeAdapter {
         logger.trace("Counting the Salesforce Records");
         logger.trace("  Structure: " + request.getStructure());
         logger.trace("  Query: " + request.getQuery());
-        
+
         String structure = request.getStructure();
         
         if (!VALID_STRUCTURES.contains(structure)) {
@@ -129,9 +125,30 @@ public class AzureAdapter implements BridgeAdapter {
         
         AzureQualificationParser parser = new AzureQualificationParser();
         String query = parser.parse(request.getQuery(),request.getParameters());
-
-        String url = String.format("https://management.core.usgovcloudapi.net/%s", this.subscriptionId);
         
+        // Subscription ID should be passed in between square brackets as the first
+        // argument. Ex: [abc-123-xyz]. Put all matches of square brackets in
+        // an array (in case other query values have square brackets). Since 
+        // the Subscription ID will be the first match, we will grab the first
+        // element of the array to get it.
+        
+        ArrayList<String> subscriptionId = new ArrayList<String>();
+        Pattern p = Pattern.compile("\\[(.*?)\\]");
+        Matcher m = p.matcher(query);
+        
+        // Adding all content between square brackets into an array.
+        while(m.find()) {
+            subscriptionId.add(m.group(1));
+        }
+        
+        String url = null;
+
+        if (subscriptionId.isEmpty()) {
+            throw new BridgeError("Subscription ID must be provided as the first query.");
+        } else {
+            url = String.format("https://management.core.usgovcloudapi.net/%s", subscriptionId.get(0));
+        }
+
         if (structure.equals("Images")) {
             url = String.format("%s/services/images", url);
         } else if (structure.equals("Sizes")) {
@@ -247,7 +264,28 @@ public class AzureAdapter implements BridgeAdapter {
         AzureQualificationParser parser = new AzureQualificationParser();
         String query = parser.parse(request.getQuery(),request.getParameters());
         
-        String url = String.format("https://management.core.usgovcloudapi.net/%s", this.subscriptionId);
+        // Subscription ID should be passed in between square brackets as the first
+        // argument. Ex: [abc-123-xyz]. Put all matches of square brackets in
+        // an array (in case other query values have square brackets). Since 
+        // the Subscription ID will be the first match, we will grab the first
+        // element of the array to get it.
+        
+        ArrayList<String> subscriptionId = new ArrayList<String>();
+        Pattern p = Pattern.compile("\\[(.*?)\\]");
+        Matcher m = p.matcher(query);
+        
+        // Adding all content between square brackets into an array.
+        while(m.find()) {
+            subscriptionId.add(m.group(1));
+        }
+        
+        String url = null;
+
+        if (subscriptionId.isEmpty()) {
+            throw new BridgeError("Subscription ID must be provided as the first query.");
+        } else {
+            url = String.format("https://management.core.usgovcloudapi.net/%s", subscriptionId.get(0));
+        }
 
         if (structure.equals("Images")) {
             url = String.format("%s/services/images", url);
@@ -381,7 +419,28 @@ public class AzureAdapter implements BridgeAdapter {
         AzureQualificationParser parser = new AzureQualificationParser();
         String query = parser.parse(request.getQuery(),request.getParameters());
         
-        String url = String.format("https://management.core.usgovcloudapi.net/%s", this.subscriptionId);
+        // Subscription ID should be passed in between square brackets as the first
+        // argument. Ex: [abc-123-xyz]. Put all matches of square brackets in
+        // an array (in case other query values have square brackets). Since 
+        // the Subscription ID will be the first match, we will grab the first
+        // element of the array to get it.
+        
+        ArrayList<String> subscriptionId = new ArrayList<String>();
+        Pattern p = Pattern.compile("\\[(.*?)\\]");
+        Matcher m = p.matcher(query);
+        
+        // Adding all content between square brackets into an array.
+        while(m.find()) {
+            subscriptionId.add(m.group(1));
+        }
+        
+        String url = null;
+
+        if (subscriptionId.isEmpty()) {
+            throw new BridgeError("Subscription ID must be provided as the first query.");
+        } else {
+            url = String.format("https://management.core.usgovcloudapi.net/%s", subscriptionId.get(0));
+        }
 
         if (structure.equals("Images")) {
             url = String.format("%s/services/images", url);
