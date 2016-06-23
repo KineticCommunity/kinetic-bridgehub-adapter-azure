@@ -103,7 +103,7 @@ public class AzureAdapter implements BridgeAdapter {
      *-------------------------------------------------------------------------------------------*/
 
     public static final List<String> VALID_STRUCTURES = Arrays.asList(new String[] {
-        "Images", "Sizes", "Virtual Networks", "Regions", "Storage Accounts", "Affinity Groups"
+        "Images", "Sizes", "Virtual Networks", "Regions", "Storage Accounts", "Affinity Groups", "Cloud Services"
     });
     
     /*---------------------------------------------------------------------------------------------
@@ -113,7 +113,7 @@ public class AzureAdapter implements BridgeAdapter {
     @Override
     public Count count(BridgeRequest request) throws BridgeError {
         // Log the access
-        logger.trace("Counting the Salesforce Records");
+        logger.trace("Counting the Azure Records");
         logger.trace("  Structure: " + request.getStructure());
         logger.trace("  Query: " + request.getQuery());
 
@@ -161,6 +161,8 @@ public class AzureAdapter implements BridgeAdapter {
             url = String.format("%s/services/storageservices", url);
         } else if (structure.equals("Affinity Groups")) {
             url = String.format("%s/affinitygroups", url);
+        } else if (structure.equals("Cloud Services")) {
+            url = String.format("%s/services/hostedservices", url);
         }
 
         JSONArray outputArray = null;
@@ -197,6 +199,8 @@ public class AzureAdapter implements BridgeAdapter {
             outputArray = (JSONArray) jsonOutput.getJSONObject("StorageServices").getJSONArray("StorageService");
         } else if (structure.equals("Affinity Groups")) {
             outputArray = (JSONArray) jsonOutput.getJSONObject("AffinityGroups").getJSONArray("AffinityGroup");
+        } else if (structure.equals("Cloud Services")) {
+            outputArray = (JSONArray) jsonOutput.getJSONObject("HostedServices").getJSONArray("HostedService");
         }
 
         Pattern pattern = Pattern.compile("([\"\"])(?:(?=(\\\\?))\\2.)*?\\1");
@@ -244,7 +248,7 @@ public class AzureAdapter implements BridgeAdapter {
     @Override
     public Record retrieve(BridgeRequest request) throws BridgeError {
         // Log the access
-        logger.trace("Retrieving ServiceNow Record");
+        logger.trace("Retrieving Azure Record");
         logger.trace("  Structure: " + request.getStructure());
         logger.trace("  Query: " + request.getQuery());
         logger.trace("  Fields: " + request.getFieldString());
@@ -299,6 +303,8 @@ public class AzureAdapter implements BridgeAdapter {
             url = String.format("%s/services/storageservices", url);
         } else if (structure.equals("Affinity Groups")) {
             url = String.format("%s/affinitygroups", url);
+        } else if (structure.equals("Cloud Services")) {
+            url = String.format("%s/services/hostedservices", url);
         }
         
         JSONArray outputArray = null;
@@ -335,6 +341,8 @@ public class AzureAdapter implements BridgeAdapter {
             outputArray = (JSONArray) jsonOutput.getJSONObject("StorageServices").getJSONArray("StorageService");
         } else if (structure.equals("Affinity Groups")) {
             outputArray = (JSONArray) jsonOutput.getJSONObject("AffinityGroups").getJSONArray("AffinityGroup");
+        } else if (structure.equals("Cloud Services")) {
+            outputArray = (JSONArray) jsonOutput.getJSONObject("HostedServices").getJSONArray("HostedService");
         }
 
         Pattern pattern = Pattern.compile("([\"\"])(?:(?=(\\\\?))\\2.)*?\\1");
@@ -398,7 +406,7 @@ public class AzureAdapter implements BridgeAdapter {
     @Override
     public RecordList search(BridgeRequest request) throws BridgeError {
         // Log the access
-        logger.trace("Searching ServiceNow Records");
+        logger.trace("Searching Azure Records");
         logger.trace("  Structure: " + request.getStructure());
         logger.trace("  Query: " + request.getQuery());
         logger.trace("  Fields: " + request.getFieldString());
@@ -454,6 +462,8 @@ public class AzureAdapter implements BridgeAdapter {
             url = String.format("%s/services/storageservices", url);
         } else if (structure.equals("Affinity Groups")) {
             url = String.format("%s/affinitygroups", url);
+        } else if (structure.equals("Cloud Services")) {
+            url = String.format("%s/services/hostedservices", url);
         }
         
         JSONArray outputArray = null;
@@ -490,6 +500,8 @@ public class AzureAdapter implements BridgeAdapter {
             outputArray = (JSONArray) jsonOutput.getJSONObject("StorageServices").getJSONArray("StorageService");
         } else if (structure.equals("Affinity Groups")) {
             outputArray = (JSONArray) jsonOutput.getJSONObject("AffinityGroups").getJSONArray("AffinityGroup");
+        } else if (structure.equals("Cloud Services")) {
+            outputArray = (JSONArray) jsonOutput.getJSONObject("HostedServices").getJSONArray("HostedService");
         }
         
         Pattern pattern = Pattern.compile("([\"\"])(?:(?=(\\\\?))\\2.)*?\\1");
