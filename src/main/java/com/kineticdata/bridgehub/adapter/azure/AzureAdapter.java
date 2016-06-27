@@ -103,7 +103,7 @@ public class AzureAdapter implements BridgeAdapter {
      *-------------------------------------------------------------------------------------------*/
 
     public static final List<String> VALID_STRUCTURES = Arrays.asList(new String[] {
-        "Images", "Sizes", "Virtual Networks", "Regions", "Storage Accounts", "Affinity Groups", "Cloud Services"
+        "Images", "Sizes", "Virtual Networks", "Regions", "Storage Accounts", "Affinity Groups", "Cloud Services", "Virtual Machines"
     });
     
     /*---------------------------------------------------------------------------------------------
@@ -132,21 +132,21 @@ public class AzureAdapter implements BridgeAdapter {
         // the Subscription ID will be the first match, we will grab the first
         // element of the array to get it.
         
-        ArrayList<String> subscriptionId = new ArrayList<String>();
+        ArrayList<String> apiParams = new ArrayList<String>();
         Pattern p = Pattern.compile("\\[(.*?)\\]");
         Matcher m = p.matcher(query);
         
         // Adding all content between square brackets into an array.
         while(m.find()) {
-            subscriptionId.add(m.group(1));
+            apiParams.add(m.group(1));
         }
         
         String url = null;
 
-        if (subscriptionId.isEmpty()) {
+        if (apiParams.isEmpty()) {
             throw new BridgeError("Subscription ID must be provided as the first query.");
         } else {
-            url = String.format("https://management.core.usgovcloudapi.net/%s", subscriptionId.get(0));
+            url = String.format("https://management.core.usgovcloudapi.net/%s", apiParams.get(0));
         }
 
         if (structure.equals("Images")) {
@@ -163,6 +163,8 @@ public class AzureAdapter implements BridgeAdapter {
             url = String.format("%s/affinitygroups", url);
         } else if (structure.equals("Cloud Services")) {
             url = String.format("%s/services/hostedservices", url);
+        } else if (structure.equals("Virtual Machines")) {
+            url = String.format("%s/services/hostedservices/%s?embed-detail=true", url, apiParams.get(1));
         }
 
         JSONArray outputArray = null;
@@ -172,7 +174,7 @@ public class AzureAdapter implements BridgeAdapter {
             String response = processGetRequest(new URL(url), this.keystorePath, this.keystorePassword);
             // Parse XML response to JSON
             jsonOutput = XML.toJSONObject(response);
-            logger.trace("!!!"+jsonOutput);
+            logger.trace(jsonOutput);
         } catch (UnrecoverableKeyException ex) {
             throw new BridgeError("Unable to make a connection to properly execute the query to Azure");
         } catch (MalformedURLException ex) {
@@ -201,6 +203,9 @@ public class AzureAdapter implements BridgeAdapter {
             outputArray = (JSONArray) jsonOutput.getJSONObject("AffinityGroups").getJSONArray("AffinityGroup");
         } else if (structure.equals("Cloud Services")) {
             outputArray = (JSONArray) jsonOutput.getJSONObject("HostedServices").getJSONArray("HostedService");
+        } else if (structure.equals("Virtual Machines")) {
+            outputArray = (JSONArray) jsonOutput.getJSONObject("HostedService").getJSONObject("Deployments")
+                                      .getJSONObject("Deployment").getJSONObject("RoleInstanceList").getJSONArray("RoleInstance");
         }
 
         Pattern pattern = Pattern.compile("([\"\"])(?:(?=(\\\\?))\\2.)*?\\1");
@@ -274,21 +279,21 @@ public class AzureAdapter implements BridgeAdapter {
         // the Subscription ID will be the first match, we will grab the first
         // element of the array to get it.
         
-        ArrayList<String> subscriptionId = new ArrayList<String>();
+        ArrayList<String> apiParams = new ArrayList<String>();
         Pattern p = Pattern.compile("\\[(.*?)\\]");
         Matcher m = p.matcher(query);
         
         // Adding all content between square brackets into an array.
         while(m.find()) {
-            subscriptionId.add(m.group(1));
+            apiParams.add(m.group(1));
         }
         
         String url = null;
 
-        if (subscriptionId.isEmpty()) {
+        if (apiParams.isEmpty()) {
             throw new BridgeError("Subscription ID must be provided as the first query.");
         } else {
-            url = String.format("https://management.core.usgovcloudapi.net/%s", subscriptionId.get(0));
+            url = String.format("https://management.core.usgovcloudapi.net/%s", apiParams.get(0));
         }
 
         if (structure.equals("Images")) {
@@ -305,6 +310,8 @@ public class AzureAdapter implements BridgeAdapter {
             url = String.format("%s/affinitygroups", url);
         } else if (structure.equals("Cloud Services")) {
             url = String.format("%s/services/hostedservices", url);
+        } else if (structure.equals("Virtual Machines")) {
+            url = String.format("%s/services/hostedservices/%s?embed-detail=true", url, apiParams.get(1));
         }
         
         JSONArray outputArray = null;
@@ -343,6 +350,9 @@ public class AzureAdapter implements BridgeAdapter {
             outputArray = (JSONArray) jsonOutput.getJSONObject("AffinityGroups").getJSONArray("AffinityGroup");
         } else if (structure.equals("Cloud Services")) {
             outputArray = (JSONArray) jsonOutput.getJSONObject("HostedServices").getJSONArray("HostedService");
+        } else if (structure.equals("Virtual Machines")) {
+            outputArray = (JSONArray) jsonOutput.getJSONObject("HostedService").getJSONObject("Deployments")
+                                      .getJSONObject("Deployment").getJSONObject("RoleInstanceList").getJSONArray("RoleInstance");
         }
 
         Pattern pattern = Pattern.compile("([\"\"])(?:(?=(\\\\?))\\2.)*?\\1");
@@ -433,21 +443,21 @@ public class AzureAdapter implements BridgeAdapter {
         // the Subscription ID will be the first match, we will grab the first
         // element of the array to get it.
         
-        ArrayList<String> subscriptionId = new ArrayList<String>();
+        ArrayList<String> apiParams = new ArrayList<String>();
         Pattern p = Pattern.compile("\\[(.*?)\\]");
         Matcher m = p.matcher(query);
         
         // Adding all content between square brackets into an array.
         while(m.find()) {
-            subscriptionId.add(m.group(1));
+            apiParams.add(m.group(1));
         }
         
         String url = null;
 
-        if (subscriptionId.isEmpty()) {
+        if (apiParams.isEmpty()) {
             throw new BridgeError("Subscription ID must be provided as the first query.");
         } else {
-            url = String.format("https://management.core.usgovcloudapi.net/%s", subscriptionId.get(0));
+            url = String.format("https://management.core.usgovcloudapi.net/%s", apiParams.get(0));
         }
 
         if (structure.equals("Images")) {
@@ -464,6 +474,8 @@ public class AzureAdapter implements BridgeAdapter {
             url = String.format("%s/affinitygroups", url);
         } else if (structure.equals("Cloud Services")) {
             url = String.format("%s/services/hostedservices", url);
+        } else if (structure.equals("Virtual Machines")) {
+            url = String.format("%s/services/hostedservices/%s?embed-detail=true", url, apiParams.get(1));
         }
         
         JSONArray outputArray = null;
@@ -502,6 +514,9 @@ public class AzureAdapter implements BridgeAdapter {
             outputArray = (JSONArray) jsonOutput.getJSONObject("AffinityGroups").getJSONArray("AffinityGroup");
         } else if (structure.equals("Cloud Services")) {
             outputArray = (JSONArray) jsonOutput.getJSONObject("HostedServices").getJSONArray("HostedService");
+        } else if (structure.equals("Virtual Machines")) {
+            outputArray = (JSONArray) jsonOutput.getJSONObject("HostedService").getJSONObject("Deployments")
+                                      .getJSONObject("Deployment").getJSONObject("RoleInstanceList").getJSONArray("RoleInstance");
         }
         
         Pattern pattern = Pattern.compile("([\"\"])(?:(?=(\\\\?))\\2.)*?\\1");
