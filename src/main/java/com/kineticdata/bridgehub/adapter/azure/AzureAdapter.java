@@ -53,6 +53,20 @@ public class AzureAdapter implements BridgeAdapter {
     
     /** Defines the logger */
     protected static Logger logger = Logger.getLogger(AzureAdapter.class);
+
+    /** Adapter version constant. */
+    public static String VERSION;
+    /** Load the properties version from the version.properties file. */
+    static {
+        try {
+            java.util.Properties properties = new java.util.Properties();
+            properties.load(AzureAdapter.class.getResourceAsStream("/"+AzureAdapter.class.getName()+".version"));
+            VERSION = properties.getProperty("version");
+        } catch (IOException e) {
+            logger.warn("Unable to load "+AzureAdapter.class.getName()+" version properties.", e);
+            VERSION = "Unknown";
+        }
+    }
     
     /** Defines the collection of property names for the adapter */
     public static class Properties {
@@ -85,7 +99,7 @@ public class AzureAdapter implements BridgeAdapter {
     
     @Override
     public String getVersion() {
-        return "1.0.0";
+        return VERSION;
     }
     
     @Override
@@ -112,11 +126,6 @@ public class AzureAdapter implements BridgeAdapter {
 
     @Override
     public Count count(BridgeRequest request) throws BridgeError {
-        // Log the access
-        logger.trace("Counting the Azure Records");
-        logger.trace("  Structure: " + request.getStructure());
-        logger.trace("  Query: " + request.getQuery());
-
         String structure = request.getStructure();
         
         if (!VALID_STRUCTURES.contains(structure)) {
@@ -252,12 +261,6 @@ public class AzureAdapter implements BridgeAdapter {
 
     @Override
     public Record retrieve(BridgeRequest request) throws BridgeError {
-        // Log the access
-        logger.trace("Retrieving Azure Record");
-        logger.trace("  Structure: " + request.getStructure());
-        logger.trace("  Query: " + request.getQuery());
-        logger.trace("  Fields: " + request.getFieldString());
-        
         String structure = request.getStructure();
         
         if (!VALID_STRUCTURES.contains(structure)) {
@@ -415,12 +418,6 @@ public class AzureAdapter implements BridgeAdapter {
 
     @Override
     public RecordList search(BridgeRequest request) throws BridgeError {
-        // Log the access
-        logger.trace("Searching Azure Records");
-        logger.trace("  Structure: " + request.getStructure());
-        logger.trace("  Query: " + request.getQuery());
-        logger.trace("  Fields: " + request.getFieldString());
-
         String structure = request.getStructure();
         Map<String,String> metadata = BridgeUtils.normalizePaginationMetadata(request.getMetadata());
         
